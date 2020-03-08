@@ -56,7 +56,7 @@ function buildTree(obj) {
 
     if (hasChild(childNodeList)) {
         html += "<ul>";
-        for (var i = 0; i < childNodeList.length; i++) {
+        for (let i = 0; i < childNodeList.length; i++) {
             buildTree(childNodeList[i]);
         }
         html += "</ul>";

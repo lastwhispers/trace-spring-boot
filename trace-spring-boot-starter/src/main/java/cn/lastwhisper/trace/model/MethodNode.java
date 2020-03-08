@@ -1,5 +1,9 @@
 package cn.lastwhisper.trace.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -15,22 +19,26 @@ public class MethodNode {
     /**
      * 全局唯一(一次Controller、service、dao调用都不同,用于定位一个traceId内的method情况)
      */
-    private String randomId;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long randomId;
 
     /**
      * 一次请求调用的唯一标识(一次Controller、service、dao调用共享一个)
      */
-    private String traceId;
+    //@JsonSerialize(using = ToStringSerializer.class)
+    private Long traceId;
 
     /**
      * 调用线程id(多次Controller、service、dao调用共享一个,用于统计线程池的情况)
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long threadId;
 
     /**
      * 同method全局唯一(多次Controller、service、dao调用都相同,用于定位一个method的静态信息)
      */
-    private String methodId;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long methodId;
 
     /**
      * 权限修饰符
@@ -105,19 +113,19 @@ public class MethodNode {
     }
 
 
-    public String getRandomId() {
+    public Long getRandomId() {
         return randomId;
     }
 
-    public void setRandomId(String randomId) {
+    public void setRandomId(Long randomId) {
         this.randomId = randomId;
     }
 
-    public String getTraceId() {
+    public Long getTraceId() {
         return traceId;
     }
 
-    public void setTraceId(String traceId) {
+    public void setTraceId(Long traceId) {
         this.traceId = traceId;
     }
 
@@ -129,11 +137,11 @@ public class MethodNode {
         this.threadId = threadId;
     }
 
-    public String getMethodId() {
+    public Long getMethodId() {
         return methodId;
     }
 
-    public void setMethodId(String methodId) {
+    public void setMethodId(Long methodId) {
         this.methodId = methodId;
     }
 

@@ -1,6 +1,6 @@
 package cn.lastwhisper.trace.service;
 
-import cn.lastwhisper.trace.util.ApplicationContextUtil;
+import cn.lastwhisper.trace.common.ApplicationContextHelper;
 import cn.lastwhisper.trace.util.CollectionUtil;
 import cn.lastwhisper.trace.util.IdUtil;
 import cn.lastwhisper.trace.util.JoinPointParesUtil;
@@ -108,7 +108,7 @@ public class TraceInstance {
 
     private static void saveController(MethodNode methodNode) {
         try {
-            TraceService traceService = ApplicationContextUtil.getBean(TraceService.class);
+            TraceService traceService = ApplicationContextHelper.getBean(TraceService.class);
             traceService.saveController(methodNode);
         } catch (Exception e) {
             e.printStackTrace();
@@ -117,8 +117,8 @@ public class TraceInstance {
 
     private static void saveGeneral(MethodNode methodNode) {
         try {
-            TraceService traceService = ApplicationContextUtil.getBean(TraceService.class);
-            traceService.saveGeneral(methodNode);
+            TraceService traceService = ApplicationContextHelper.getBean(TraceService.class);
+            traceService.saveMethodNode(methodNode);
         } catch (Exception e) {
             e.printStackTrace();
         }

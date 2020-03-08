@@ -82,16 +82,16 @@ function info(randomId) {
         title: '方法详情',
         content: $("#info"),
         shade: 0.3,
-        btn: ['提交', '重置'],
+        btn: ['关闭'],
         btn1: function (index, layero) {
-            alert("提交");
-        },
-        btn2: function (index, layero) {
-            alert("重置");
-            return false;
-        },
-        cancel: function (layero, index) {
             layer.closeAll();
-        }
+        },
+        // btn2: function (index, layero) {
+        //     alert("重置");
+        //     return false;
+        // },
+        // cancel: function (layero, index) {
+        //     layer.closeAll();
+        // }
     });
 }

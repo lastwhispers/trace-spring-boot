@@ -22,7 +22,7 @@ import java.util.Map;
  */
 public class JoinPointParesUtil {
 
-    private static Map<String, String> methodIdMap = new HashMap<>();
+    private static Map<String, Long> methodIdMap = new HashMap<>();
 
     private static Logger logger = LoggerFactory.getLogger(JoinPointParesUtil.class);
 
@@ -86,10 +86,10 @@ public class JoinPointParesUtil {
         }
         String methodIdKey = methodIdKeySb.toString();
 
-        //Long methodId = methodIdMap.get(methodIdKey);
-        String methodId = methodIdMap.get(methodIdKey);
+        Long methodId = methodIdMap.get(methodIdKey);
+        //String methodId = methodIdMap.get(methodIdKey);
         if (methodId == null) {
-            methodId = String.valueOf(IdUtil.getSnowflakeId());
+            methodId = IdUtil.getSnowflakeId();
             methodIdMap.put(methodIdKey, methodId);
         }
         methodNode.setMethodId(methodId);
@@ -101,9 +101,9 @@ public class JoinPointParesUtil {
         methodNode.setParameters(parameters);
         methodNode.setExceptionTypes(exceptionTypes);
 
-        methodNode.setRandomId(String.valueOf(IdUtil.getSnowflakeId()));
+        methodNode.setRandomId(IdUtil.getSnowflakeId());
         methodNode.setThreadId(Thread.currentThread().getId());
-        methodNode.setTraceId(String.valueOf(IdUtil.getTraceId()));
+        methodNode.setTraceId(IdUtil.getTraceId());
         methodNode.setStartTime(new Date());
 
         return methodNode;

@@ -31,14 +31,14 @@ public class TraceController {
     // 根据traceId获取单个调用链
     @GetMapping("/singleTrace")
     @ResponseBody
-    public MethodNode singleTrace(String traceId) {
+    public MethodNode singleTrace(Long traceId) {
         return traceService.getCallChain(traceId);
     }
 
     // 根据randomId获取单个MethodNode
     @GetMapping("/singleMethodNode")
     @ResponseBody
-    public MethodNode singleMethodNode(String randomId) {
+    public MethodNode singleMethodNode(Long randomId) {
         return traceService.getMethodNode(randomId);
     }
 

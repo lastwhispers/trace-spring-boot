@@ -5,18 +5,13 @@ Trace是一个单体架构的监控追踪系统。用于收集单体架构系统
 ## 实时调用链
 
 实时收集接口请求调用链的耗时、异常相关信息
-
-
-![实时调用链监控](resource\real-trace.gif)
-
-
+![实时调用链](https://img-blog.csdnimg.cn/20200410172312739.gif)
 
 ## 静态调用链
 
 该功能将请求去重，保存静态调用链路，可以用来学习一个Web项目或者别的用途，比如[生成毕设中的类图]()。
 
-![静态调用链监控](resource\static-chain.gif)
-
+![静态调用链路](https://img-blog.csdnimg.cn/20200410172337626.gif)
 # 快速使用
 
 trace-spring-boot-samples中有使用的例子
@@ -65,7 +60,8 @@ public class SpingBootApplication {
 ```
 
 `@EnableTrace`配置完毕后，请先编译项目，在编译期注解处理器（Annotation Processor Tool）会生成适配于你项目的`CollectorAspect.java`源文件，这是Trace的起点。
-![静态调用链监控](resource\apt.png)
+
+![apt生成源码点](https://img-blog.csdnimg.cn/20200410172414260.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3Bkc3UxNjE1MzAyNDc=,size_16,color_FFFFFF,t_70)
 
 对于未在切点表达式中的方法可以通过`@Exclude`注解进行包含，对应的可以使用`@Include`对方法或类进行排除。
 
@@ -75,7 +71,6 @@ Trace默认使用cn.lastwhisper.trace.repository.impl包下的`*InMemoryReposito
 
 如果你需要持久化数据，只需要重写cn.lastwhisper.trace.repository包下的`*Repository`接口，实现对应规范的方法即可。
 
-# 核心原理
+# 原理架构
 
-
-![核心原理图](resource\architecture.png)
+![原理架构](https://img-blog.csdnimg.cn/20200410172435250.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3Bkc3UxNjE1MzAyNDc=,size_16,color_FFFFFF,t_70)

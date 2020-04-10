@@ -8,6 +8,8 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 /**
  *
  * @author lastwhisper
@@ -18,7 +20,7 @@ import org.springframework.stereotype.Component;
 //@Component
 public class CollectorAspect {
 
-    @Autowired
+    @Autowired(required = false)
     private Collector collector;
 
     @Pointcut("(execution(public * com.example.demo..*(..)) || @annotation(cn.lastwhisper.trace.aspect.annotation.Include)) && !@annotation(cn.lastwhisper.trace.aspect.annotation.Exclude)")

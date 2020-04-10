@@ -73,6 +73,15 @@ public class SpingBootApplication {
 如果你的项目ip和端口不是127.0.0.1:8080，请修改成对应ip和端口。
 如果有shiro、Spring Security权限控制，请赋予监控地址权限。
 
+# 如何移除
+
+由于第一次写三方库，难免有考虑不周到的地方，下面介绍如何完全移除Trace组件。
+
+1. 将`@EnableTrace`（`@Exclude`、`@Include`）删除，并导入的包也移除。
+
+2. 删除Trace的maven依赖。
+3. clean项目或者删除target目录下generated-sources目录。
+
 # 存储组件
 
 Trace默认使用cn.lastwhisper.trace.repository.impl包下的`*InMemoryRepository`，通过几个基础的数据结构ArrayList、LinkedList、HashMap完成分页、查询、LRU。

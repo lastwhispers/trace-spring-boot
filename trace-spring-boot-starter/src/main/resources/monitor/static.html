@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Monitor</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="css/tree.css" media="all">
+    <link rel="stylesheet" href="css/style.css" media="all">
+    <link rel="stylesheet" href="css/bootstrap.min.css" media="all">
+</head>
+
+<body>
+
+<div>
+    <div class="layui-tab layui-tab-card" lay-filter="tabs">
+        <ul class="layui-tab-title">
+            <li onclick="window.location.href='index.html'">实时调用链</li>
+            <li class="layui-this" onclick="window.location.href='static.html'">静态调用链</li>
+            <li onclick="window.location.href='statistics.html'">监控统计</li>
+            <li onclick="window.location.href='clear.html'">清空数据</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item">
+            </div>
+
+            <div class="layui-tab-item layui-show">
+                <div id="static-view"></div>
+                <div id="static-page"></div>
+            </div>
+
+            <div class="layui-tab-item">
+
+            </div>
+
+            <div class="layui-tab-item">
+            </div>
+        </div>
+    </div>
+
+    <div id="method-info" style="display:none;align-content: center;">
+        <div style="margin-left: 40%">
+            <h2>静态信息</h2>
+        </div>
+        <table class="layui-table" id="className"></table>
+        <table class="layui-table" id="interfaces"></table>
+        <table class="layui-table" id="signature"></table>
+        <table class="layui-table" id="parameter"></table>
+    </div>
+
+</div>
+
+<script src="layui/layui.all.js" charset="utf-8"></script>
+<script src="js/api.js" charset="utf-8"></script>
+<script src="js/util.js" charset="utf-8"></script>
+<script src="js/method.js" charset="utf-8"></script>
+<script src="js/method.tree.js" charset="utf-8"></script>
+
+<script id="staticTemp" type="text/html">
+    <div class="layui-collapse" lay-filter="static">
+        {{# layui.each(d, function(index, d){ }}
+        <div class="layui-colla-item">
+            <h2 class="layui-colla-title">
+                {{d.httpMethod+' '+d.uri+' '+d.chainId+' '+d.className+'-->'+d.methodName}}</h2>
+            <div class="layui-colla-content">
+                <!--调用链-->
+                <div class="tree" id="{{d.chainId}}">
+                </div>
+            </div>
+        </div>
+        {{# }); }}
+    </div>
+</script>
+
+<script>
+    var element, layer, table, laypage, laytpl, form, $;
+
+    ;!function () {
+        element = layui.element;
+        layer = layui.layer;
+        table = layui.table;
+        laypage = layui.laypage;
+        laytpl = layui.laytpl;
+        form = layui.form;
+        $ = layui.$;
+
+        initPage();
+        initListener();
+    }();
+
+    function initPage() {
+        asyncHttpGet(static_total_api, function (rtn) {
+            laypage.render({
+                elem: 'static-page'
+                , count: rtn
+                , theme: '#FFB800'
+                , limit: 10
+                , limits: [10, 20, 30, 40, 50]
+                , loading: true
+                , layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']
+                , jump: function (obj, first) {
+                    let curr = obj.curr;
+                    let size = obj.limit;
+                    asyncHttpGet(static_page_api + '/' + curr + '/' + size, function (rtn) {
+                        if (!isEmpty(rtn)) {
+                            // script模板
+                            staticPageTemp(rtn);
+                            // 重新渲染模板后，必须重新初始化监听
+                            element.render('collapse', 'static');
+                        } else {
+                            layer.msg('The server has no data');
+                        }
+                    });
+
+                }
+            });
+        });
+
+    }
+
+    function staticPageTemp(data) {
+        let scriptTemp = staticTemp.innerHTML;
+        laytpl(scriptTemp).render(data, function (html) {
+            $('#static-view').html(html)
+        });
+    }
+
+</script>
+</body>
+
+</html>

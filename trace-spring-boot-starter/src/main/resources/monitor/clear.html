@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Monitor</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="css/tree.css" media="all">
+    <link rel="stylesheet" href="css/style.css" media="all">
+    <link rel="stylesheet" href="css/bootstrap.min.css" media="all">
+</head>
+
+<body>
+
+<div>
+    <div class="layui-tab layui-tab-card" lay-filter="tabs">
+        <ul class="layui-tab-title">
+            <li onclick="window.location.href='index.html'">实时调用链</li>
+            <li onclick="window.location.href='static.html'">静态调用链</li>
+            <li onclick="window.location.href='statistics.html'">监控统计</li>
+            <li class="layui-this" onclick="window.location.href='clear.html'">清空数据</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item">
+            </div>
+
+            <div class="layui-tab-item">
+            </div>
+
+            <div class="layui-tab-item">
+            </div>
+
+            <div class="layui-tab-item layui-show">
+                clear
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="layui/layui.all.js" charset="utf-8"></script>
+<script src="js/api.js" charset="utf-8"></script>
+<script src="js/util.js" charset="utf-8"></script>
+
+<script>
+
+</script>
+</body>
+
+</html>

@@ -4,11 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cn.lastwhiser</groupId>
+    <groupId>io.github.lastwhispers</groupId>
     <artifactId>trace-spring-boot-starter</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0.RELEASE</version>
+    <packaging>jar</packaging>
 
-    <name>trace-spring-boot-starter</name>
+    <name>${project.artifactId}</name>
+    <description>Used to invoke the chain visualization.</description>
+    <url>https://github.com/lastwhispers/trace-spring-boot</url>
 
     <properties>
         <java.version>1.8</java.version>
@@ -21,20 +24,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
             <version>2.2.4.RELEASE</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <version>2.2.4.RELEASE</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-            <version>5.1.5</version>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>
@@ -45,6 +42,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -72,31 +70,20 @@
 
     <!--以下是发布到Maven中央仓库用到的配置-->
 
-    <scm>
-        <tag>master</tag>
-        <url>https://github.com/ggb2312/trace-spring-boot-starter.git</url>
-        <connection>scm:git:git@github.com:ggb2312/trace-spring-boot-starter.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com:ggb2312/trace-spring-boot-starter.git</developerConnection>
-    </scm>
-
-    <distributionManagement>
-        <repository>
-            <id>releases_maven</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots_maven</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
-
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
         </license>
     </licenses>
+
+    <scm>
+        <tag>master</tag>
+        <url>https://github.com/lastwhispers/trace-spring-boot.git</url>
+        <connection>scm:git:git@github.com:lastwhispers/trace-spring-boot.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:lastwhispers/trace-spring-boot.git</developerConnection>
+    </scm>
+
 
     <developers>
         <developer>
@@ -106,22 +93,20 @@
         </developer>
     </developers>
 
+    <!-- 使用个人资料：由于生成javadoc和源jar以及使用GPG签署组件是一个相当耗时的过程，因此这些执行通常与正常的构建配置隔离并移动到配置文件中。然后，在通过激活配置文件执行部署时，将使用此配置文件。 -->
     <profiles>
         <profile>
-            <!-- -P release -->
-            <id>release</id>
-            <repositories>
-                <repository>
-                    <id>releases_maven</id>
-                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-                </repository>
-            </repositories>
+            <id>ossrh</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <build>
                 <plugins>
-                    <!-- Source -->
+                    <!-- 要生成Javadoc和Source jar文件，您必须配置javadoc和源Maven插件 -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
+                        <version>2.2.1</version>
                         <executions>
                             <execution>
                                 <phase>package</phase>
@@ -131,10 +116,11 @@
                             </execution>
                         </executions>
                     </plugin>
-                    <!-- Javadoc -->
+
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.9.1</version>
                         <executions>
                             <execution>
                                 <phase>package</phase>
@@ -149,7 +135,7 @@
                             </additionalJOptions>
                         </configuration>
                     </plugin>
-                    <!-- GPG -->
+                    <!--  必须配置GPG插件用于使用以下配置对组件进行签名 -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
@@ -163,6 +149,7 @@
                             </execution>
                         </executions>
                     </plugin>
+
                     <!--release-->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -176,7 +163,19 @@
                     </plugin>
                 </plugins>
             </build>
+            <!-- 【注】snapshotRepository 与 repository 中的 id 一定要与 setting.xml 中 server 的 id 保持一致！ -->
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+                <repository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
         </profile>
     </profiles>
+
 
 </project>

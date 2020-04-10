@@ -11,49 +11,49 @@ public class ExceptionInfo {
      * 出现异常的方法
      * 异常代码行号
      */
-    private StackTraceElement stackTraceElement;
+    private StackTraceElement ste;
 
     /**
      * 异常详情
      */
-    private String detailMessage;
+    private String msg;
 
     /**
      * 异常全限定名
      */
-    private String exceptionName;
+    private String name;
 
     public ExceptionInfo() {
     }
 
-    public ExceptionInfo(StackTraceElement stackTraceElement, String detailMessage, String exceptionName) {
-        this.stackTraceElement = stackTraceElement;
-        this.detailMessage = detailMessage;
-        this.exceptionName = exceptionName;
+    public ExceptionInfo(StackTraceElement ste, String msg, String name) {
+        this.ste = ste;
+        this.msg = msg;
+        this.name = name;
     }
 
-    public StackTraceElement getStackTraceElement() {
-        return stackTraceElement;
+    public StackTraceElement getSte() {
+        return ste;
     }
 
-    public void setStackTraceElement(StackTraceElement stackTraceElement) {
-        this.stackTraceElement = stackTraceElement;
+    public void setSte(StackTraceElement ste) {
+        this.ste = ste;
     }
 
-    public String getDetailMessage() {
-        return detailMessage;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setDetailMessage(String detailMessage) {
-        this.detailMessage = detailMessage;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
-    public String getExceptionName() {
-        return exceptionName;
+    public String getName() {
+        return name;
     }
 
-    public void setExceptionName(String exceptionName) {
-        this.exceptionName = exceptionName;
+    public void setName(String name) {
+        this.name = name;
     }
 }
 

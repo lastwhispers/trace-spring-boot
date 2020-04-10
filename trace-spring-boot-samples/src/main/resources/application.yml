@@ -1,0 +1,13 @@
+spring:
+  profiles:
+    active: dev
+logging:
+  config: classpath:logback-spring.xml
+
+#trace:
+#  lru:
+#    record: 100 #最多记录请求数
+#    node: 500 #最多记录结点数据
+#    buffer: 20 #批量移除
+#  work:
+#    queue: 1000 #工作队列大小

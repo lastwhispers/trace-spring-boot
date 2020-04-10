@@ -1,6 +1,0 @@
-logging:
-  level:
-    root: info
-aop:
-  log:
-    controller: true

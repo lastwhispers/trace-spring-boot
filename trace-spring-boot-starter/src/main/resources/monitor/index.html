@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Monitor</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="css/tree.css" media="all">
+    <link rel="stylesheet" href="css/style.css" media="all">
+    <link rel="stylesheet" href="css/bootstrap.min.css" media="all">
+</head>
+
+<body>
+
+<div>
+    <div class="layui-tab layui-tab-card" lay-filter="tabs">
+        <ul class="layui-tab-title">
+            <li class="layui-this" onclick="window.location.href='index.html'">实时调用链</li>
+            <li onclick="window.location.href='static.html'">静态调用链</li>
+            <li onclick="window.location.href='statistics.html'">监控统计</li>
+            <li onclick="window.location.href='clear.html'">清空数据</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div id="real-view"></div>
+                <div id="real-page"></div>
+            </div>
+
+            <div class="layui-tab-item">
+            </div>
+
+            <div class="layui-tab-item">
+            </div>
+
+            <div class="layui-tab-item">
+            </div>
+        </div>
+    </div>
+
+    <div id="node-info" style="display:none;align-content: center;">
+        <div style="margin-left: 40%">
+            <h2>运行时信息</h2>
+        </div>
+        <table class="layui-table" id="time"></table>
+        <table class="layui-table" id="exception"></table>
+        <div style="margin-left: 40%">
+            <h2>静态信息</h2>
+        </div>
+        <table class="layui-table" id="className"></table>
+        <table class="layui-table" id="interfaces"></table>
+        <table class="layui-table" id="signature"></table>
+        <table class="layui-table" id="parameter"></table>
+    </div>
+
+</div>
+
+<script src="layui/layui.all.js" charset="utf-8"></script>
+<script src="js/api.js" charset="utf-8"></script>
+<script src="js/util.js" charset="utf-8"></script>
+<script src="js/node.tree.js" charset="utf-8"></script>
+<script src="js/node.js" charset="utf-8"></script>
+
+<script id="realTemp" type="text/html">
+    <div class="layui-collapse" lay-filter="real">
+        {{# layui.each(d, function(index, d){ }}
+        <div class="layui-colla-item">
+            {{# if(d.flag==true){ }}
+            <h3 class="layui-colla-title" style="color: #b94a48">
+                {{d.httpMethod+' '+d.uri+' '+d.traceId+' '+d.className+'-->'+d.methodName+' '+d.start+' '+d.end+' 耗时:'+d.relative+'ms'}}</h3>
+            {{# } else { }}
+            <h3 class="layui-colla-title">
+                {{d.httpMethod+' '+d.uri+' '+d.traceId+' '+d.className+'-->'+d.methodName+' '+d.start+' '+d.end+' 耗时:'+d.relative+'ms'}}</h3>
+            {{# } }}
+            <div class="layui-colla-content">
+                <!--调用链-->
+                <div class="tree" id="{{d.traceId}}">
+                </div>
+            </div>
+        </div>
+        {{# }); }}
+    </div>
+</script>
+
+<script>
+    var element, layer, table, laypage, laytpl, form, $;
+    let interval;
+
+    ;!function () {
+        element = layui.element;
+        layer = layui.layer;
+        table = layui.table;
+        laypage = layui.laypage;
+        laytpl = layui.laytpl;
+        form = layui.form;
+        $ = layui.$;
+
+        initPage();
+        initListener();
+
+    }();
+
+    function initPage() {
+        asyncHttpGet(real_total_api, function (rtn) {
+            laypage.render({
+                elem: 'real-page'
+                , count: rtn
+                , theme: '#FFB800'
+                , limit: 10
+                , limits: [10, 20, 30, 40, 50]
+                , loading: true
+                , layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']
+                , jump: function (obj, first) {
+                    let curr = obj.curr;
+                    let size = obj.limit;
+                    asyncHttpGet(real_page_api + '/' + curr + '/' + size, function (rtn) {
+                        if (!isEmpty(rtn)) {
+                            // realTemp script模板
+                            realPageTemp(rtn);
+                            // 重新渲染模板后，必须重新初始化监听
+                            element.render('collapse', 'real');
+                        } else {
+                            layer.msg('The server has no data');
+                        }
+                    });
+
+                    // refreshBar();
+                }
+            });
+        });
+
+    }
+
+    function realPageTemp(data) {
+        let scriptTemp = realTemp.innerHTML;
+        laytpl(scriptTemp).render(data, function (html) {
+            $('#real-view').html(html)
+        });
+    }
+
+    function refreshBar() {
+        let mock = '<span class="layui-laypage-limits" style="color: #999;">页面刷新';
+        mock += '<select lay-ignore="" id="page-refresh">';
+        mock += '<option value="5" selected="">5 s</option>';
+        mock += '<option value="10">10 s</option>';
+        mock += '<option value="30">30 s</option>' +
+            '<option value="60">60 s</option>' +
+            '<option value="120">120 s</option>' +
+            '<option value="666666">never</option>';
+        mock += '</select>' +
+            '</span>';
+
+        $('#layui-laypage-1').append(mock);
+
+        let time = $("#page-refresh option:selected").val();
+        console.log(time);
+        if (time !== '666666') {
+            interval = startRefresh(time * 1000);
+        } else {
+            finishRefresh();
+        }
+
+        // lay-filter="page-refresh"
+        // form.on('select(refresh)', function (data) {
+        //     console.log(data);
+        //     if (data !== '666666') {
+        //         interval = startRefresh(data * 1000);
+        //     } else {
+        //         finishRefresh();
+        //     }
+        // });
+    }
+
+    function startRefresh(time) {
+        return window.setInterval('window.location.reload()', time);
+    }
+
+    function finishRefresh() {
+        window.clearInterval(interval);
+    }
+
+</script>
+</body>
+
+</html>

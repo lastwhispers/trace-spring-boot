@@ -14,7 +14,7 @@ Trace是一个单体架构的监控追踪系统。用于收集单体架构系统
 ![静态调用链路](https://img-blog.csdnimg.cn/20200410172337626.gif)
 # 快速使用
 
-trace-spring-boot-samples中有使用的例子
+目前只支持SpringBoot项目，trace-spring-boot-samples中有使用的例子
 
 ## 引入依赖
 
@@ -64,6 +64,10 @@ public class SpingBootApplication {
 ![apt生成源码点](https://img-blog.csdnimg.cn/20200410172414260.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3Bkc3UxNjE1MzAyNDc=,size_16,color_FFFFFF,t_70)
 
 对于未在切点表达式中的方法可以通过`@Exclude`注解进行包含，对应的可以使用`@Include`对方法或类进行排除。
+
+## 启动项目
+
+启动你的个人项目，访问[127.0.0.1:8080/monitor/index.html](127.0.0.1:8080/monitor/index.html)即可进入监控页面。如果有shiro、Spring Security权限控制，请赋予监控地址权限。
 
 # 存储组件
 

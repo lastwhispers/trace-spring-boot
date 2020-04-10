@@ -61,7 +61,7 @@ public class SpingBootApplication {
 }
 ```
 
-`@EnableTrace`配置完毕后，请先编译项目，在编译期注解处理器（Annotation Processor Tool）会生成适配于你项目的`CollectorAspect.java`源文件，这是Trace的起点。
+`@EnableTrace`配置完毕后，**请先编译项目！！！**，**请先编译项目！！！**，**请先编译项目！！！**，在编译期注解处理器（Annotation Processor Tool）会生成适配于你项目的`CollectorAspect.java`源文件，这是Trace的起点。
 
 ![apt生成源码点](https://img-blog.csdnimg.cn/20200410172414260.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3Bkc3UxNjE1MzAyNDc=,size_16,color_FFFFFF,t_70)
 

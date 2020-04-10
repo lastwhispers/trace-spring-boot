@@ -1,3 +1,4 @@
+
 # 介绍
 
 Trace是一个单体架构的监控追踪系统。用于收集单体架构系统中的信息数据，例如在一次请求中花费的时间、请求执行的方法链、以及操作是否出现异常和异常的详细信息等。
@@ -35,6 +36,7 @@ Trace项目本身依赖了springboot的aop和web模块，为了防止依赖传�
  	<groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-aop</artifactId>
 </dependency>
+
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -67,7 +69,9 @@ public class SpingBootApplication {
 
 ## 启动项目
 
-启动你的个人项目，访问[127.0.0.1:8080/monitor/index.html](127.0.0.1:8080/monitor/index.html)即可进入监控页面。如果有shiro、Spring Security权限控制，请赋予监控地址权限。
+启动你的个人项目，访问[127.0.0.1:8080/monitor/index.html](127.0.0.1:8080/monitor/index.html)即可进入监控页面。
+如果你的项目ip和端口不是127.0.0.1:8080，请修改成对应ip和端口。
+如果有shiro、Spring Security权限控制，请赋予监控地址权限。
 
 # 存储组件
 

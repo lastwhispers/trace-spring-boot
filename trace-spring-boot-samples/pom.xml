@@ -11,7 +11,7 @@
     <groupId>com.example</groupId>
     <artifactId>trace-spring-boot-samples</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>trace-spring-boot-starter-example</name>
+    <name>trace-spring-boot-samples</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>

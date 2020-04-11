@@ -3,6 +3,8 @@ spring:
     active: dev
 logging:
   config: classpath:logback-spring.xml
+server:
+  port: 8081
 
 #trace:
 #  lru:

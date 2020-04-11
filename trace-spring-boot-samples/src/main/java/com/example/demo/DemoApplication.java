@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author Administrator
  */
 @Slf4j
-@SpringBootApplication(scanBasePackages = "cn.lastwhisper.trace")
+@SpringBootApplication
 @EnableTrace("execution(* com.example.demo.core..*(..))")
 public class DemoApplication {
 

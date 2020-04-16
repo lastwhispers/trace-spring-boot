@@ -1,7 +1,7 @@
 package cn.lastwhisper.trace.config;
 
-import cn.lastwhisper.trace.common.collection.CascadeLRUCacheMap;
-import cn.lastwhisper.trace.common.collection.LRUCacheMap;
+import cn.lastwhisper.trace.common.collection.ConcurrentEventLruCacheMap;
+import cn.lastwhisper.trace.common.collection.ConcurrentLruCacheMap;
 import cn.lastwhisper.trace.event.CascadeEventPublisher;
 import cn.lastwhisper.trace.model.Node;
 import org.springframework.context.annotation.Bean;
@@ -33,13 +33,13 @@ public class DefaultConfig {
     }
 
     @Bean
-    public Map<Long, Node> nodeIdMap() {
-        return new LRUCacheMap<>(2000);
+    public ConcurrentLruCacheMap<Long, Node> nodeIdMap() {
+        return new ConcurrentLruCacheMap<>(2000);
     }
 
     @Bean
-    public Map<Long, Node> traceIdMap() {
-        return new CascadeLRUCacheMap<>(100, 10, cascadeEventPublisher());
+    public ConcurrentEventLruCacheMap<Long, Node> traceIdMap() {
+        return new ConcurrentEventLruCacheMap<>(100, 10, cascadeEventPublisher());
     }
 
     /**

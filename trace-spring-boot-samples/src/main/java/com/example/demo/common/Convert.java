@@ -14,13 +14,13 @@ import java.util.Map;
  * @author lastwhisper
  * @date 2020/2/14
  */
+@Include
 @Component
 public class Convert {
 
     /**
      * 被包含方法
      */
-    @Include
     public Map<String, Object> getIncludeMap(User user, Teacher teacher) {
         return getExcludeMap(user, teacher);
     }

@@ -37,7 +37,7 @@ Trace的Maven依赖
 <dependency>
     <groupId>io.github.lastwhispers</groupId>
     <artifactId>trace-spring-boot-starter</artifactId>
-    <version>1.0.0.RELEASE</version>
+    <version>1.0.2.RELEASE</version>
 </dependency>
 ```
 

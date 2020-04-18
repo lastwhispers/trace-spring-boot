@@ -1,7 +1,7 @@
 
 # 介绍
 
-Trace是一个单体架构的异步非阻塞监控追踪系统。用于收集单体架构系统中的信息数据，例如在一次请求中花费的时间、请求执行的方法链、以及操作是否出现异常和异常的详细信息等。
+Trace是一个单体架构的异步非阻塞监控追踪系统。用于收集单体架构系统中的信息数据，例如在一次请求中花费的时间、请求执行的方法调用链、以及操作是否出现异常和异常的详细信息等。
 
 >该项目源码地址：[https://github.com/lastwhispers/trace-spring-boot](https://github.com/lastwhispers/trace-spring-boot)     
 项目在线体验地址：[http://39.105.49.50:8081/monitor/index.html](http://39.105.49.50:8081/monitor/index.html)  

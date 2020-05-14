@@ -50,4 +50,9 @@ public class StaticTraceController {
         return staticTraceService.getMethodBySignatureId(signatureId);
     }
 
+    @GetMapping("/clear")
+    public void clear() {
+        staticTraceService.clear();
+    }
+
 }

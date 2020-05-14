@@ -1,7 +1,5 @@
 package cn.lastwhisper.trace.service;
 
-import java.util.Map;
-
 /**
  *  静态资源读取策略
  * @author lastwhisper
@@ -16,8 +14,8 @@ public interface ResourceService {
      */
     byte[] read(String classPath);
 
-    /**
-     * 页面缓存大小
-     */
-    Map<String, Long> cacheSizeMap();
+    ///**
+    // * 页面缓存大小
+    // */
+    //Map<String, Long> cacheSizeMap();
 }

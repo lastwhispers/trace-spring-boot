@@ -54,7 +54,7 @@ public class RealTraceInMemoryRepository implements RealTraceRepository {
 
     @Override
     public Node getTraceByTraceId(Long traceId) {
-        Node node = traceIdMap.syncGet(traceId);
+        Node node = traceIdMap.get(traceId);
         if (node == null) {
             logger.debug("traceId:{} not find Trace", traceId);
         }
@@ -63,7 +63,7 @@ public class RealTraceInMemoryRepository implements RealTraceRepository {
 
     @Override
     public Node getNodeBySpanId(Long nodeId) {
-        Node node = nodeIdMap.syncGet(nodeId);
+        Node node = nodeIdMap.get(nodeId);
         if (node == null) {
             logger.debug("randomId:{} not find MethodNode", nodeId);
         }
@@ -72,12 +72,12 @@ public class RealTraceInMemoryRepository implements RealTraceRepository {
 
     @Override
     public void saveNode(Node node) {
-        nodeIdMap.syncPut(node.getNodeId(), node);
+        nodeIdMap.put(node.getNodeId(), node);
     }
 
     @Override
     public void saveHttpNode(Node node) {
-        traceIdMap.syncPut(node.getTraceId(), node);
+        traceIdMap.put(node.getTraceId(), node);
     }
 
     @Override
@@ -88,8 +88,8 @@ public class RealTraceInMemoryRepository implements RealTraceRepository {
     @Override
     public void clear() {
         pages.clear();
-        nodeIdMap.syncClear();
-        traceIdMap.syncClear();
+        nodeIdMap.clear();
+        traceIdMap.clear();
     }
 
     @Override

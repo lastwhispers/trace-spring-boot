@@ -29,6 +29,7 @@ public class AsyncSerialCollector implements Collector {
     private ExecutorService singleThreadExecutor;
 
 
+    @Override
     public void before(JoinPoint jp) {
         HttpServletRequest request = RequestHelper.getHttpServletRequest();
         if (request != null) {
@@ -42,6 +43,7 @@ public class AsyncSerialCollector implements Collector {
         }
     }
 
+    @Override
     public void exceptionAfter(JoinPoint jp, Throwable throwable) {
         HttpServletRequest request = RequestHelper.getHttpServletRequest();
         if (request != null) {
@@ -55,6 +57,7 @@ public class AsyncSerialCollector implements Collector {
         }
     }
 
+    @Override
     public void after(JoinPoint jp) {
         exceptionAfter(jp, null);
     }

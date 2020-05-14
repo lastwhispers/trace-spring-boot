@@ -50,5 +50,10 @@ public class RealTraceController {
         return realTraceService.getNodeBySpanId(nodeId);
     }
 
+    @GetMapping("/clear")
+    public void clear() {
+         realTraceService.clear();
+    }
+
 
 }

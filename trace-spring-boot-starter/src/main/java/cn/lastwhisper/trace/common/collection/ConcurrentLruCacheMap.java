@@ -19,10 +19,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @param <K> 键类型
  * @param <V> 值类型
  */
-public class ConcurrentLruCacheMap<K, V> extends LinkedHashMap<K, V> {
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
+public class ConcurrentLruCacheMap<K, V> {
     // 读写锁
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
@@ -30,22 +27,35 @@ public class ConcurrentLruCacheMap<K, V> extends LinkedHashMap<K, V> {
 
     private final Lock writeLock = readWriteLock.writeLock();
 
-    /** 容量，超过此容量自动删除末尾元素 */
-    private int capacity;
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private LruCacheMap cache;
 
     public ConcurrentLruCacheMap(int capacity) {
-        super(capacity, 0.75f, true);
-        this.capacity = capacity;
+        this.cache = new LruCacheMap(capacity);
     }
 
-    @Override
-    protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
-        boolean flag = size() > capacity;
-        if (flag) {
-            logger.debug("remove k:{},v:{}", eldest.getKey(), eldest.getValue());
+    private class LruCacheMap extends LinkedHashMap<K, V> {
+
+        /** 容量，超过此容量自动删除末尾元素 */
+        private int capacity;
+
+        public LruCacheMap(int capacity) {
+            super(capacity, 0.75f, true);
+            this.capacity = capacity;
         }
-        return flag;
+
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+            boolean flag = size() > capacity;
+            if (flag) {
+                logger.debug("remove k:{},v:{}", eldest.getKey(), eldest.getValue());
+            }
+            return flag;
+        }
+
     }
+
 
     /**
      * 同步写
@@ -53,10 +63,10 @@ public class ConcurrentLruCacheMap<K, V> extends LinkedHashMap<K, V> {
      * @param k k
      * @param v v
      */
-    public V syncPut(K k, V v) {
+    public V put(K k, V v) {
         writeLock.lock();
         try {
-            return this.put(k, v);
+            return this.cache.put(k, v);
         } finally {
             writeLock.unlock();
         }
@@ -67,10 +77,10 @@ public class ConcurrentLruCacheMap<K, V> extends LinkedHashMap<K, V> {
      *
      * @param k k
      */
-    public V syncGet(K k) {
+    public V get(K k) {
         readLock.lock();
         try {
-            return this.get(k);
+            return this.cache.get(k);
         } finally {
             readLock.unlock();
         }
@@ -79,10 +89,10 @@ public class ConcurrentLruCacheMap<K, V> extends LinkedHashMap<K, V> {
     /**
      * 同步写
      */
-    public void syncClear() {
+    public void clear() {
         writeLock.lock();
         try {
-            this.clear();
+            this.cache.clear();
         } finally {
             writeLock.unlock();
         }

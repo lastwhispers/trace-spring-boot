@@ -8,7 +8,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -21,25 +20,24 @@ import java.util.WeakHashMap;
 public class ResourceServiceImpl implements ResourceService {
 
     // 对象锁
-    private final Object lock = new Object();
-    // 缓存静态资源
-    private WeakHashMap<String, byte[]> cacheByteMap = new WeakHashMap<>();
-    // 缓存大小
-    private Map<String, Long> cacheSizeMap = new HashMap<>();
+    private final Object mutex = new Object();
+
+    // 弱引用，每次 GC 都会被回收
+    private Map<String, byte[]> cacheByteMap = new WeakHashMap<>();
 
     @Override
     public byte[] read(String classPath) {
-        //从缓存拿
+        // 从缓存拿
         byte[] resources = cacheByteMap.get(classPath);
         if (resources != null) {
             return resources;
         }
-        //判空
+        // load static resource
         ClassPathResource resource = new ClassPathResource(classPath);
         if (!resource.exists()) {
             return null;
         }
-        //读取
+        // resource convert bytes
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         try (BufferedInputStream bufferedInputStream = new BufferedInputStream(resource.getInputStream());
              BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(stream)) {
@@ -51,21 +49,17 @@ public class ResourceServiceImpl implements ResourceService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //DCL双检查锁
+        byte[] resourceBytes = stream.toByteArray();
+
+        // DCL 写入缓存，重复写入?
         if (!cacheByteMap.containsKey(classPath)) {
-            synchronized (lock) {
+            synchronized (mutex) {
                 if (!cacheByteMap.containsKey(classPath)) {
-                    cacheByteMap.put(classPath, stream.toByteArray());
-                    cacheSizeMap.put(classPath, (long) stream.size());
+                    cacheByteMap.put(classPath, resourceBytes);
                 }
             }
         }
-        return stream.toByteArray();
-    }
-
-    @Override
-    public Map<String, Long> cacheSizeMap() {
-        return cacheSizeMap;
+        return resourceBytes;
     }
 
 }

@@ -22,7 +22,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @param <K> 键类型
  * @param <V> 值类型
  */
-public class ConcurrentEventLruCacheMap<K, V> extends LinkedHashMap<K, V> {
+public class ConcurrentEventLruCacheMap<K, V> {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -33,14 +33,7 @@ public class ConcurrentEventLruCacheMap<K, V> extends LinkedHashMap<K, V> {
 
     private final Lock writeLock = readWriteLock.writeLock();
 
-    /** 容量，超过此容量自动删除末尾元素 */
-    private int capacity;
-    /** 缓冲大小 */
-    private Integer bufferSize;
-    /** 缓冲区 */
-    private List<K> buffers;
-    /** 级联事件推送者 */
-    private CascadeEventPublisher<K> publisher;
+    private EventLruCacheMap cache;
 
     /**
      *
@@ -48,27 +41,47 @@ public class ConcurrentEventLruCacheMap<K, V> extends LinkedHashMap<K, V> {
      * @param bufferSize 缓冲区大小
      */
     public ConcurrentEventLruCacheMap(int capacity, Integer bufferSize, CascadeEventPublisher<K> cascadeEventPublisher) {
-        super(capacity, 0.75f, true);
-        this.capacity = capacity;
-        this.bufferSize = bufferSize;
-        buffers = new ArrayList<>(bufferSize);
-        publisher = cascadeEventPublisher;
+        this.cache = new EventLruCacheMap(capacity, bufferSize, cascadeEventPublisher);
     }
 
-    @Override
-    protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
-        boolean flag = size() > capacity;
-        if (flag) {
-            buffers.add(eldest.getKey());
-            if (buffers.size() >= bufferSize) {
-                logger.debug("Trigger delete buffer:{}", buffers.toString());
-                publisher.sendRemoveMessage(new ArrayList<>(buffers));
-                buffers.clear();
-            }
-            logger.debug("There are still {} triggers to delete the buffer. buffer traceId:{} buffer Size:{}",
-                    bufferSize - buffers.size(), eldest.getKey(), buffers.size());
+    private class EventLruCacheMap extends LinkedHashMap<K, V> {
+        /** 容量，超过此容量自动删除末尾元素 */
+        private int capacity;
+        /** 缓冲大小 */
+        private Integer bufferSize;
+        /** 缓冲区 */
+        private List<K> buffers;
+        /** 级联事件推送者 */
+        private CascadeEventPublisher<K> publisher;
+
+        /**
+         * @param capacity LRU大小
+         * @param bufferSize 缓冲区大小
+         */
+        public EventLruCacheMap(int capacity, Integer bufferSize, CascadeEventPublisher<K> cascadeEventPublisher) {
+            super(capacity, 0.75f, true);
+            this.capacity = capacity;
+            this.bufferSize = bufferSize;
+            buffers = new ArrayList<>(bufferSize);
+            publisher = cascadeEventPublisher;
         }
-        return flag;
+
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+            boolean flag = size() > capacity;
+            if (flag) {
+                buffers.add(eldest.getKey());
+                if (buffers.size() >= bufferSize) {
+                    logger.debug("Trigger delete buffer:{}", buffers.toString());
+                    publisher.sendRemoveMessage(new ArrayList<>(buffers));
+                    buffers.clear();
+                }
+                logger.debug("There are still {} triggers to delete the buffer. buffer traceId:{} buffer Size:{}",
+                        bufferSize - buffers.size(), eldest.getKey(), buffers.size());
+            }
+            return flag;
+        }
+
     }
 
     /**
@@ -77,10 +90,10 @@ public class ConcurrentEventLruCacheMap<K, V> extends LinkedHashMap<K, V> {
      * @param k k
      * @param v v
      */
-    public V syncPut(K k, V v) {
+    public V put(K k, V v) {
         writeLock.lock();
         try {
-            return this.put(k, v);
+            return this.cache.put(k, v);
         } finally {
             writeLock.unlock();
         }
@@ -91,10 +104,10 @@ public class ConcurrentEventLruCacheMap<K, V> extends LinkedHashMap<K, V> {
      *
      * @param k k
      */
-    public V syncGet(K k) {
+    public V get(K k) {
         readLock.lock();
         try {
-            return this.get(k);
+            return this.cache.get(k);
         } finally {
             readLock.unlock();
         }
@@ -103,10 +116,10 @@ public class ConcurrentEventLruCacheMap<K, V> extends LinkedHashMap<K, V> {
     /**
      * 同步写
      */
-    public void syncClear() {
+    public void clear() {
         writeLock.lock();
         try {
-            this.clear();
+            this.cache.clear();
         } finally {
             writeLock.unlock();
         }

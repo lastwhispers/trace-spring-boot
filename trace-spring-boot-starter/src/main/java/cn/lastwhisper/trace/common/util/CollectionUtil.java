@@ -3,6 +3,7 @@ package cn.lastwhisper.trace.common.util;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * 集合工具类

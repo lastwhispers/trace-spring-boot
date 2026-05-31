@@ -2,6 +2,7 @@ package cn.lastwhisper.trace.controller;
 
 import cn.lastwhisper.trace.model.Node;
 import cn.lastwhisper.trace.model.RealVo;
+import cn.lastwhisper.trace.repository.RealTraceRepository;
 import cn.lastwhisper.trace.service.RealTraceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,9 @@ public class RealTraceController {
     @Autowired
     private RealTraceService realTraceService;
 
+    @Autowired
+    private RealTraceRepository realTraceRepository;
+
     @GetMapping("/total")
     @ResponseBody
     public int total() {
@@ -40,7 +44,11 @@ public class RealTraceController {
     @GetMapping("/trace/{traceId}")
     @ResponseBody
     public Node trace(@PathVariable Long traceId) {
-        return realTraceService.getTraceByTraceId(traceId);
+        Node node = realTraceService.getTraceByTraceId(traceId);
+        if (node == null && realTraceRepository.hasPage(traceId)) {
+            realTraceRepository.removePageByTraceId(traceId);
+        }
+        return node;
     }
 
     // 根据spanId获取实时方法信息

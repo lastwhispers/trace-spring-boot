@@ -64,4 +64,14 @@ public interface RealTraceRepository {
      * 级联删除
      */
     void removePage(Set<RealVo> buffer);
+
+    /**
+     * 检查页面是否存在指定traceId
+     */
+    boolean hasPage(Long traceId);
+
+    /**
+     * 删除指定traceId的页面展示信息
+     */
+    void removePageByTraceId(Long traceId);
 }

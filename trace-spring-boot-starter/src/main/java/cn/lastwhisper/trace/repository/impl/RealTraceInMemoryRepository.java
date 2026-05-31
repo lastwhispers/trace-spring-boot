@@ -105,4 +105,19 @@ public class RealTraceInMemoryRepository implements RealTraceRepository {
         pages.removeAll(buffer);
     }
 
+    @Override
+    public boolean hasPage(Long traceId) {
+        for (RealVo vo : pages) {
+            if (vo.getTraceId().equals(traceId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void removePageByTraceId(Long traceId) {
+        pages.removeIf(vo -> vo.getTraceId().equals(traceId));
+    }
+
 }

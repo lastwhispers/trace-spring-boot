@@ -38,7 +38,7 @@ public class StaticTraceInMemoryRepository implements StaticTraceRepository {
     public List<StaticVo> listByLimit(int start, int end) {
         List<StaticVo> result = new ArrayList<>(end - start);
         logger.debug("listByLimit start:{}\tend:{}", start, end);
-        for (int i = start; i <= end; i++) {
+        for (int i = start; i < end; i++) {
             result.add(pages.get(i));
         }
         return result;

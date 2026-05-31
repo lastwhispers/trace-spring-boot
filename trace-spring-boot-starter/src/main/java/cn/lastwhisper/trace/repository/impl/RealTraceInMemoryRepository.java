@@ -46,7 +46,7 @@ public class RealTraceInMemoryRepository implements RealTraceRepository {
     public List<RealVo> listByLimit(int start, int end) {
         List<RealVo> result = new ArrayList<>(end - start);
         logger.debug("listByLimit start:{}\tend:{}", start, end);
-        for (int i = start; i <= end; i++) {
+        for (int i = start; i < end; i++) {
             result.add(pages.get(i));
         }
         return result;

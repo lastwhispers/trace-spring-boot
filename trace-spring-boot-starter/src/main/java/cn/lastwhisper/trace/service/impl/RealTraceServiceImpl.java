@@ -55,10 +55,6 @@ public class RealTraceServiceImpl implements RealTraceService {
         }
         if (end > count) {
             end = count;
-        } else {
-            //size=8时:start=0,end=8，会查9条数据
-            //size=8时:start=8,end=16，会查9条数据
-            end--;
         }
 
         return realTraceRepository.listByLimit(start, end);

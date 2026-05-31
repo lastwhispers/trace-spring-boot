@@ -54,39 +54,39 @@ public class EndpointAutoTester implements ApplicationRunner {
         endpoints.add(new Endpoint("[多PathVariable]", "/test/param/" + random.nextInt(100) + "/user/auto", null, HttpMethod.GET));
     }
 
-//    /**
-//     * 每3秒随机调用一个接口
-//     */
-//    @Scheduled(fixedRate = 3000)
-//    public void randomCall() {
-//        if (baseUrl == null) {
-//            baseUrl = "http://localhost:" + port;
-//            log.info("\n========== 定时随机调用已启动，每3秒执行一次 ==========");
-//        }
-//
-//        Endpoint ep = endpoints.get(random.nextInt(endpoints.size()));
-//        int count = callCount.incrementAndGet();
-//        callEndpoint(count, ep);
-//    }
-//
-//    /**
-//     * 每30秒执行一次批量调用（连续5个请求），模拟突发流量
-//     */
-//    @Scheduled(fixedRate = 30000, initialDelay = 10000)
-//    public void batchCall() {
-//        log.info("\n--- 批量调用: 连续5个请求 ---");
-//        for (int i = 0; i < 5; i++) {
-//            Endpoint ep = endpoints.get(random.nextInt(endpoints.size()));
-//            int count = callCount.incrementAndGet();
-//            callEndpoint(count, ep);
-//            try {
-//                Thread.sleep(200);
-//            } catch (InterruptedException e) {
-//                Thread.currentThread().interrupt();
-//                return;
-//            }
-//        }
-//    }
+    /**
+     * 每3秒随机调用一个接口
+     */
+    @Scheduled(fixedRate = 3000)
+    public void randomCall() {
+        if (baseUrl == null) {
+            baseUrl = "http://localhost:" + port;
+            log.info("\n========== 定时随机调用已启动，每3秒执行一次 ==========");
+        }
+
+        Endpoint ep = endpoints.get(random.nextInt(endpoints.size()));
+        int count = callCount.incrementAndGet();
+        callEndpoint(count, ep);
+    }
+
+    /**
+     * 每30秒执行一次批量调用（连续5个请求），模拟突发流量
+     */
+    @Scheduled(fixedRate = 3000, initialDelay = 1000)
+    public void batchCall() {
+        log.info("\n--- 批量调用: 连续5个请求 ---");
+        for (int i = 0; i < 5; i++) {
+            Endpoint ep = endpoints.get(random.nextInt(endpoints.size()));
+            int count = callCount.incrementAndGet();
+            callEndpoint(count, ep);
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+        }
+    }
 
     private void callEndpoint(int count, Endpoint ep) {
         String path = ep.path;
